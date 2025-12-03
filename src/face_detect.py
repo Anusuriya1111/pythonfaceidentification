@@ -4,7 +4,11 @@ import sys
 #python face_detect.py  tamil.jpg  haarcascade_frontalface_default.xml
 # Get user supplied values
 imagePath = sys.argv[1]
-cascPath = "haarcascade_frontalface_default.xml"
+# Absolute path to the folder where this script resides
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load cascade from the same folder
+cascPath = os.path.join(BASE_DIR, "haarcascade_frontalface_default.xml")
 
 # Create the haar cascade
 faceCascade = cv2.CascadeClassifier(cascPath)

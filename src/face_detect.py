@@ -1,5 +1,6 @@
 import cv2
 import sys
+import os
 
 #python face_detect.py  tamil.jpg  haarcascade_frontalface_default.xml
 # Get user supplied values

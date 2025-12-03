@@ -1,37 +1,34 @@
+import os
 import cv2
 import sys
-import os
 
-#python face_detect.py  tamil.jpg  haarcascade_frontalface_default.xml
-# Get user supplied values
-imagePath = sys.argv[1]
-# Absolute path to the folder where this script resides
+# Absolute path of this script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Load cascade from the same folder
+# Cascade file path
 cascPath = os.path.join(BASE_DIR, "haarcascade_frontalface_default.xml")
-
-# Create the haar cascade
 faceCascade = cv2.CascadeClassifier(cascPath)
 
-# Read the image
+if faceCascade.empty():
+    raise IOError(f"Cannot load cascade file: {cascPath}")
+
+# Image path from argument
+imagePath = sys.argv[1]
 image = cv2.imread(imagePath)
+if image is None:
+    raise IOError(f"Cannot load image file: {imagePath}")
+
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-# Detect faces in the image
-faces = faceCascade.detectMultiScale(
-    gray,
-    scaleFactor=1.1,
-    minNeighbors=5,
-    minSize=(30, 30),
-    flags = cv2.CASCADE_SCALE_IMAGE
-)
+# Detect faces
+faces = faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+print(f"Found {len(faces)} faces!")
 
-print("Found {0} faces!".format(len(faces)))
-
-# Draw a rectangle around the faces
+# Draw rectangles
 for (x, y, w, h) in faces:
     cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-cv2.imshow("Faces found", image)
-cv2.waitKey(0)
+# Save output instead of imshow
+output_path = os.path.join(BASE_DIR, "output.png")
+cv2.imwrite(output_path, image)
+print(f"Output saved to {output_path}")
